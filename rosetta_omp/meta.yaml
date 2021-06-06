@@ -1,0 +1,35 @@
+package:
+  name: rosetta_omp
+  version: 2018.04.post.dev+386.bcov.stable1.2080508938e
+
+source:
+  git_url: https://github.com/RosettaCommons/main.git
+  git_rev: 2080508938e77c062662d444d8d2a6eb2f6adeb7 
+  patches:
+    - patch-rosetta-for-conda-build.diff
+
+requirements:
+  build:
+    - python=2.7
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake=3.20
+    - ninja=1.10
+
+  host:
+    - libgomp     # [linux64]
+    - llvm-openmp # [osx]
+    - zlib
+
+  run:
+    - libgomp     # [linux64]
+    - llvm-openmp # [osx]
+    - zlib
+
+test:
+  commands:
+    - rosetta_scripts
+
+about:
+  home: http://rosettacommons.org
+  license: Rosetta Software License
