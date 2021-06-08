@@ -15,7 +15,7 @@ echo "--- Configure"
 mkdir -p build
 pushd build
 
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-I\ ${PREFIX}/include -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-I\ ${PREFIX}/include
 
 echo "--- Build"
 make -j7 rif_dock_test rifgen
