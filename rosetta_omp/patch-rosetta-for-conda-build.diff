@@ -1,17 +1,8 @@
---- Rosetta/source/src/core/io/silent/ProteinSilentStruct.hh.orig	2021-06-06 08:12:24.000000000 -0700
-+++ Rosetta/source/src/core/io/silent/ProteinSilentStruct.hh	2021-06-06 08:12:28.000000000 -0700
-@@ -72,7 +72,7 @@
- 		resize( nres_in );
- 		//fold_tree_ = core::kinematics::FoldTree();
- 		bJumps_use_IntraResStub_ = false;
--		symminfo_ = new core::conformation::symmetry::SymmetryInfo();
-+		symminfo_ = core::conformation::symmetry::SymmetryInfoOP( new core::conformation::symmetry::SymmetryInfo() );
- 		symminfo_->set_use_symmetry(false);
- 	}
-
---- Rosetta/source/cmake/build/build.settings.cmake.orig	2021-06-06 08:11:36.000000000 -0700
-+++ Rosetta/source/cmake/build/build.settings.cmake	2021-06-06 16:57:17.000000000 -0700
-@@ -52,7 +52,6 @@
+diff --git a/source/cmake/build/build.settings.cmake b/source/cmake/build/build.settings.cmake
+index 1f73699632b..b0efe0745b3 100644
+--- a/source/cmake/build/build.settings.cmake
++++ b/source/cmake/build/build.settings.cmake
+@@ -52,7 +52,6 @@ if( ${COMPILER} STREQUAL "gcc" )
  			-Wall
  			-Wextra
  			-pedantic
@@ -19,33 +10,11 @@
  			-Wno-long-long
  			-Wno-strict-aliasing
  	)
-@@ -245,7 +244,6 @@
- 			-Wextra
- 			-pedantic
- 			#-Weverything
--			-Werror # REMOVE FOR RELEASE
- 			-Wno-long-long
- 			-Wno-strict-aliasing
- 			#-Wno-documentation
-@@ -278,6 +276,7 @@
- if(APPLE AND ${COMPILER} STREQUAL "clang")
-     list( REMOVE_ITEM compile
- 	-stdlib=libstdc++
-+	-I\ src/platform/linux
-     )
-     list( REMOVE_ITEM shlink
- 	-stdlib=libstdc++
---- Rosetta/source/cmake/build_cxx11_omp/CMakeLists.txt.orig	2021-06-06 08:11:56.000000000 -0700
-+++ Rosetta/source/cmake/build_cxx11_omp/CMakeLists.txt	2021-06-06 08:18:06.000000000 -0700
-@@ -9,14 +9,14 @@
-
- ############ Build Type, Mode, Link Rules, Compiler, Extras
- SET(MODE release)
--SET(COMPILER gcc)
- SET(LINK_RULES shared)
-+SET(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-
- ############ Build Rules
+diff --git a/source/cmake/build_cxx11_omp/CMakeLists.txt b/source/cmake/build_cxx11_omp/CMakeLists.txt
+index 23082655a18..622c1845ae5 100644
+--- a/source/cmake/build_cxx11_omp/CMakeLists.txt
++++ b/source/cmake/build_cxx11_omp/CMakeLists.txt
+@@ -16,7 +16,7 @@ SET(LINK_RULES shared)
  INCLUDE(../build/compiler.cmake)
  INCLUDE(../build/build.pre.cmake)
  INCLUDE(../build/${LINK_RULES}.build.cmake)
@@ -54,17 +23,10 @@
 
  ADD_DEFINITIONS(-DUSEOMP)
  ADD_DEFINITIONS(-DUSE_OPENMP)
-@@ -30,8 +30,16 @@
- SET_SOURCE_FILES_PROPERTIES( ../../src/protocols/cryst/spacegroup.cc PROPERTIES COMPILE_FLAGS -O0 )
-
+@@ -32,6 +32,11 @@ SET_SOURCE_FILES_PROPERTIES( ../../src/protocols/cryst/spacegroup.cc PROPERTIES
  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -ffor-scope -std=c++11 -pipe -march=core2 -mtune=generic -O3 -ffast-math -fno-finite-math-only -funroll-loops -finline-functions -finline-limit=20000 -s")
--SET(CMAKE_SHARED_LINKER_FLAGS "-lgomp")
--SET(CMAKE_EXE_LINKER_FLAGS "-lgomp  -L/usr/local/lib")
-+
-+if( ${COMPILER} STREQUAL "gcc" )
-+  SET(CMAKE_SHARED_LINKER_FLAGS "-lgomp")
-+  SET(CMAKE_EXE_LINKER_FLAGS "-lgomp  -L/usr/local/lib")
-+endif()
+ SET(CMAKE_SHARED_LINKER_FLAGS "-lgomp")
+ SET(CMAKE_EXE_LINKER_FLAGS "-lgomp  -L/usr/local/lib")
 +
 +if(DEFINED CONDA_LIB_PREFIX)
 +  add_link_options("-L${CONDA_LIB_PREFIX}")
@@ -73,7 +35,7 @@
  include_directories("/usr/local/include")
 
 
-@@ -41,3 +49,5 @@
+@@ -41,3 +46,5 @@ INCLUDE(../build/build.post.cmake)
  INCLUDE( ../build/apps.all.cmake )
  INCLUDE( ../build/pilot_apps.all.cmake )
 

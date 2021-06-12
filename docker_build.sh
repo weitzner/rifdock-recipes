@@ -53,7 +53,7 @@ docker run \
            -e HOST_USER_ID=$HOST_USER_ID \
            -e UPLOAD_PACKAGES=$UPLOAD_PACKAGES \
            $DOCKER_IMAGE \
-           /bin/bash -c "git config --global url.\"https://${GH_TOKEN}:@github.com/\".insteadOf \"https://github.com/\" && conda build /home/conda/root --croot /home/conda/build -c conda-forge"
+           /bin/bash -c "git config --global url.\"https://${GH_TOKEN}:@github.com/\".insteadOf \"https://github.com/\" && conda build /home/conda/root --croot /home/conda/build"
 
 # if you're on a mac and the fs performance is terrible, maybe you want to set
 # some volumes on the vm? It's like 1000x faster.
@@ -64,4 +64,4 @@ docker run \
 #            -e HOST_USER_ID=$HOST_USER_ID \
 #            -e UPLOAD_PACKAGES=$UPLOAD_PACKAGES \
 #            $DOCKER_IMAGE \
-#            /bin/bash -c "git config --global url.\"https://${GH_TOKEN}:@github.com/\".insteadOf \"https://github.com/\" && conda build /home/conda/root --croot /home/conda/build -c conda-forge"
+#            /bin/bash -c "git config --global url.\"https://${GH_TOKEN}:@github.com/\".insteadOf \"https://github.com/\" && conda build /home/conda/root --croot /home/conda/build"
