@@ -21,8 +21,8 @@ UPLOAD_PACKAGES=False
 
 # Conda-build copies work tree into build root, so build root must be outside
 # tree to avoid recursive copy.
-case $(readlink -f $(realpath $ARTIFACTS))/
-  in $(readlink -f $ROOT)/*)
+case $(greadlink -f $(realpath $ARTIFACTS))/
+  in $(greadlink -f $ROOT)/*)
     echo "conda-build output root: '$ARTIFACTS' can not fall within working tree: '$ROOT'" && usage;
 esac
 
