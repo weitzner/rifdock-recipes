@@ -9,6 +9,10 @@ First, build the conda packages for rifdock and its rosetta dependency with the 
 ./docker_build.sh rifdock [CONDA CHANNEL PATH] [GITHUB TOKEN FILE]
 ```
 
+`[GITHUB TOKEN FILE]` is a file containing a GitHub API/Personal access token. The token must be scoped with at _least_ the entire `repo` scope.
+
+The `[GITHUB TOKEN FILE]` is required since the Rosetta repository is private.
+
 Those packages do not need to built again unless there is a compelling upstream update that we'd like to use.
 That being said, as our workflow evolves, we may wish to capture that in our container by including additional scripts or tools.
 To build an image with rifdock installed via conda, use the following command:
