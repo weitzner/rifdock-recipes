@@ -1,0 +1,5 @@
+package:
+  version: 2018.09.60072
+
+source:
+  path: /home/conda/rosetta
