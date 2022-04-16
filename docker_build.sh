@@ -21,19 +21,18 @@ UPLOAD_PACKAGES=False
 
 # these two variables are used to control the rosetta build - they are not set when builing rifdock
 APPEND_YAML=""
-VOLUMES=""
-if [[ "${1:-}" == "rosetta_omp" ]]; then
-  # need to include an additional yaml file in the conda build command below
-  APPEND_YAML="--append-file /home/conda/root/meta.git.yaml"
-fi
+ROSETTA_PATH=$THISDIR # only for rosetta_local builds
 
-if [[ "${1:-}" == "rosetta_local" ]]; then
+if [[ "${1:-}" == "rosetta_omp" ]]; then
+  # additional yaml file to include to build rosetta from github
+  APPEND_YAML="--append-file /home/conda/root/meta.git.yaml"
+elif [[ "${1:-}" == "rosetta_local" ]]; then
   # adjust directory to point to the correct conda recipe
   ROOT=$THISDIR/rosetta_omp
-  # need to include an additional yaml file in the conda build command below
+  # additional yaml file to include to build rosetta from the release
   APPEND_YAML="--append-file /home/conda/root/meta.local.yaml"
-  # include an additional volume to mount the local rosetta installation
-  VOLUMES="-v $THISDIR/../rosetta_src_2018.09.60072_bundle/main:/home/conda/root/rosetta"
+  # path to the rosetta source; will be mounted to the container
+  ROSETTA_PATH=$(realpath ..)/rosetta_src_2018.09.60072_bundle/main
 fi
 
 # Conda-build copies work tree into build root, so build root must be outside
@@ -66,7 +65,7 @@ set -x
 docker run \
            -v "${ROOT}":/home/conda/root:rw,z \
            -v "${ARTIFACTS}":/home/conda/build:rw,z \
-           "${VOLUMES}" \
+           -v "${ROSETTA_PATH}":/home/conda/rosetta:rw,z \
            -e BINSTAR_TOKEN \
            -e HOST_USER_ID=$HOST_USER_ID \
            -e UPLOAD_PACKAGES=$UPLOAD_PACKAGES \
