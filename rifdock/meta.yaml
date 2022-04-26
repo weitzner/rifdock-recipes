@@ -4,7 +4,7 @@ package:
 
 source:
   git_url: https://github.com/rifdock/rifdock.git
-  git_rev: 9ece4162b790a2e1f386638a28f74206205e352
+  git_rev: 305f8a004f28c37b451d4964ed38bd9ecfb02516
   git_depth: 1
   patches:
     - patch-rifdock-for-conda-build.diff
